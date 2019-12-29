@@ -94,8 +94,8 @@ def create():
             outfile.write(entry_json)
         
         # TODO: go to this entry in the results
-        return render_template("create.html", form=form)
-       
+        return display_notes()
+        
     return render_template("create.html", form=form)
 
 @app.route("/notes")
