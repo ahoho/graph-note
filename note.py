@@ -19,8 +19,6 @@ app = Flask(__name__)
 # TODO: consider making entries / entry classes 
 # good Redis answer: https://stackoverflow.com/a/50504591/5712749
 redis_client = Redis()
-redis_client.flushdb()
-redis_client.set("intialized", 0)
 
 def generate_links_from_text(text):
     """
@@ -28,24 +26,34 @@ def generate_links_from_text(text):
     links are formatted as <id-name>
     """
     linked_ids = re.findall("(?<=<)[^<> ]+(?=>)", text)
-    # TODO: validate linked ids
+    entry_ids = [id.decode('utf-8') for id in redis_client.lrange("entry_ids", 0, -1)]
+    if len(ids := set(linked_ids) - set(entry_ids)) > 0:
+        raise KeyError(f"The ids `{ids}` were not found in existing data")
+
     return linked_ids
 
 def add_entry_to_redis(entry):
     """
     Store entry in redis, cleaning up its html
     """
+    entry_id = entry["id"]
     text = entry["text"]
     if isinstance(text, bytes):
         text = text.decode("utf-8")
-    entry["links"] = ",".join(entry["links"])
     
-    redis_client.lpush("entry_ids", entry["id"])
-    redis_client.hmset(entry["id"], entry)
+    # add all links to redis -- see networkX docs for hints on how to structure
+    # below can be read with `read_adjlist` -- may want to do elsewhere
+    links = entry.pop("links")
+    redis_client.rpush("adj_matrix", f"{entry_id} {' '.join(links)}")
 
+    # add the entry to redis
+    redis_client.rpush("entry_ids", entry_id)
+    redis_client.hmset(entry_id, entry)
+
+    # clean up the html
     text_html = re.sub("<([^<> ]+)>", "<a href=#\\1>\\1</a>", text)
     text_html = markdown.markdown(text_html)
-    redis_client.hset(entry["id"], "text_html", text_html)
+    redis_client.hset(entry_id, "text_html", text_html)
 
 def save_entry_from_form(form, fpath="notes.json"):
     """
@@ -66,8 +74,9 @@ def save_entry_from_form(form, fpath="notes.json"):
 
     # save to json file
     with open(fpath, "a") as outfile:
+        if outfile.tell() != 0:
+            outfile.write("\n")
         json.dump(entry, outfile)
-        outfile.write("\n")
 
     # save to redis as well
     add_entry_to_redis(entry)
@@ -79,28 +88,40 @@ def load_entries_from_json(fpath):
     if not os.path.exists(fpath):
         return []
     with open(fpath, "r") as infile:
-        return [json.loads(line) for line in infile] 
+        return [json.loads(line) for line in infile if line] 
 
 @app.route("/")
-def index():
+def index():    
     return "<a href=/create>create entry</a>"
+
+@app.route("/refresh")
+def refresh():
+    """
+    Refresh the redis store
+    """
+    redis_client.flushall()
+    
+    # first, load existing entries if not loaded
+    redis_client.set("initialized", 1)
+    data = load_entries_from_json("notes.json")
+    for entry in data:
+        add_entry_to_redis(entry)
 
 @app.route("/create", methods=["GET", "POST"])
 def create():
     """
     Create an entry
-    """
-    # first, load existing entries if not loaded
-    if not redis_client.get("initialized") == b"1":
-        redis_client.set("initialized", 1)
-        data = load_entries_from_json("notes.json")
-        for entry in data:
-            add_entry_to_redis(entry)
-    
+    """    
     form = EntryForm(request.form)
-
+    
+    if not redis_client.exists("initialized"):
+        refresh()
+    
     if request.method == "POST" and form.validate():
-        save_entry_from_form(form)
+        try:
+            save_entry_from_form(form)
+        except KeyError as e:
+            return str(e)
         return render_template("create.html", form=form)
        
     return render_template("create.html", form=form)
