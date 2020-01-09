@@ -20,7 +20,7 @@ def load_entries_from_json(fpath):
     if not os.path.exists(fpath):
         return []
     with open(fpath, "r") as infile:
-        return [json.loads(line) for line in infile if line]
+        return json.load(infile)
 
 def entry_to_json(entry, edges=None):
     """
@@ -35,5 +35,5 @@ def entry_to_json(entry, edges=None):
         'text': entry.text,
         'links': [e.to_node for e in edges],
         'created_date': entry.created_date
-    })
+    },indent="\t")
     return entry_json

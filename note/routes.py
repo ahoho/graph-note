@@ -55,11 +55,13 @@ def save_db_as_json():
     entries = Entry.query.all()
 
     with open("notes.json", "w") as outfile:
+        outfile.write("[\n")
         for i, entry in enumerate(entries):
             entry_json = entry_to_json(entry)
             outfile.write(entry_json)
             if i < (len(entries) - 1):
-                outfile.write("\n")
+                outfile.write(",\n")
+        outfile.write("\n]")
 
     return f"Saved {len(entries)} entries to notes.json"
 

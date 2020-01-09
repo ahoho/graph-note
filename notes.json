@@ -1,3 +1,44 @@
-{"id": "new-entry", "title": "new-entry", "text": "hey boy", "links": [], "created_date": "2019-12-29 12:55:22 -0500"}
-{"id": "new-entry2", "title": "new-entry2", "text": "hey boy <new-entry>", "links": ["new-entry"], "created_date": "2019-12-29 12:55:38 -0500"}
-{"id": "new-entry3", "title": "new-entry3", "text": "hey boy <new-entry2>", "links": ["new-entry2"], "created_date": "2019-12-29 12:56:06 -0500"}
+[
+{
+	"id": "\u00e9venenement-anthropoc\u00e8ne",
+	"title": "\u00c9venenement anthropoc\u00e8ne",
+	"text": "##<reading>: Book by Christophe Bonneuil et Jean-Baptiste Fressoz that historicizes idea of the Anthropocene. \nRecommended by <julien-choppin> during his lecture. Speaks about historical division between earth and humanity, which was built from those studying the earth (geology is beyond us) in parallel with those studying people (human sciences dissociated from natural causes. The <anthropocene> necessitates a breakdown as the two clash into each other.\n'La t\u00e9l\u00e9ologie du devenir \u00e9cologique de nos soci\u00e9t\u00e9s remplace celle du progr\u00e8s' (p90ish).\nP160: Wartime shipping infrastructures made by British to circumvent Napoleonic blockage of Scandinavian wood established trade network with US. Lay groundwork for mass immigration of 19th century.",
+	"links": [],
+	"created_date": "2019-11-14 12:00:00 -0500"
+},
+{
+	"id": "o\u00f9-atterrir?",
+	"title": "O\u00f9 atterrir?",
+	"text": "##<reading>: Book by Bruno Latour on formulating new political ground\nAlso from the <julien-choppin> reading list. Thesis that unregulated globalisation, migratory crisis, and suppression of threat of climate change all drawing from same central point, which we need to focus on.\nClaims that we are all experiencing a fear of being deprived of our soil (priv\u00e9es de terre, p15). In developed countries by way of the eroding sense of ownership over our own soil in face of migrants; our fear structured by the very fear experienced by colonized subjects (think I understood that last point correctly).Also from the <julien-choppin> reading list. Thesis that unregulated globalisation, migratory crisis, and suppression of threat of climate change all drawing from same central point, which we need to focus on.\nClaims that we are all experiencing a fear of being deprived of our soil (priv\u00e9es de terre, p15). In developed countries by way of the eroding sense of ownership over our own soil in face of migrants; our fear structured by the very fear experienced by colonized subjects (think I understood that last point correctly).",
+	"links": [],
+	"created_date": "2019-12-05 12:500:00 -0500"
+},
+{
+	"id": "new-entry-here",
+	"title": "new entry here",
+	"text": "##goes right there and then the rest?",
+	"links": [],
+	"created_date": "2020-01-06 00:22:26 -0500"
+},
+{
+	"id": "\u00e9?-\u0144e",
+	"title": "\u00e9? \u0144e",
+	"text": "b\u00eb, \u00e8",
+	"links": [],
+	"created_date": "2020-01-06 23:26:57 -0500"
+},
+{
+	"id": "",
+	"title": "",
+	"text": "this is a note",
+	"links": [],
+	"created_date": "2020-01-07 23:43:07 -0500"
+},
+{
+	"id": "title-here",
+	"title": "title here",
+	"text": "this is a note with a new line\\nhere",
+	"links": [],
+	"created_date": "2020-01-07 23:43:33 -0500"
+}
+]
